@@ -1,0 +1,91 @@
+<html lang="en">
+  <head>
+      <meta charset="utf-8"/>
+      <title>Slugs Wars</title>
+      <!-- Include external libraries -->
+      <style>
+      body,html {
+        overflow: hidden;
+      }
+
+        @font-face {
+          font-family: 'Starjedi';
+          src: url('Starjedi.ttf');
+        }
+
+
+        #intro {
+          display: block;
+        }
+        .score, .hint, .powerup, #loading {
+          position: absolute;
+          z-index: 1000;
+          font-weight: bold;
+          font-size: 20px;
+          top: 20px;
+          left: 20px;
+
+          color: #000;
+              text-shadow: -2px -2px 0 #ffd54e, -2px -1px 0 #ffd54e, -2px 0 0 #ffd54e, -2px 1px 0 #ffd54e, -2px 2px 0 #ffd54e, -1px -2px 0 #ffd54e, -1px -1px 0 #ffd54e, -1px 0 0 #ffd54e, -1px 1px 0 #ffd54e, -1px 2px 0 #ffd54e, 0 -2px 0 #ffd54e, 0 -1px 0 #ffd54e, 0 0 0 #ffd54e, 0 1px 0 #ffd54e, 0 2px 0 #ffd54e, 1px -2px 0 #ffd54e, 1px -1px 0 #ffd54e, 1px 0 0 #ffd54e, 1px 1px 0 #ffd54e, 1px 2px 0 #ffd54e, 2px -2px 0 #ffd54e, 2px -1px 0 #ffd54e, 2px 0 0 #ffd54e, 2px 1px 0 #ffd54e, 2px 2px 0 #ffd54e;
+              font-size: 50px;
+              font-family: 'Starjedi';
+              line-height: 86%;
+              caret-color: #ffd54e;
+              letter-spacing: normal;
+        }
+
+        #intro {
+          position: fixed;
+          right: 0;
+          bottom: 0;
+          min-width: 100%;
+          min-height: 100%;
+          display: block;
+          z-index: 10000000;
+
+        }
+
+        #loading {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          font-size: 30px;
+          display: block;
+          z-index: 100000000001;
+          line-height: 200px;
+          text-align: center;
+          top: 0;
+          cursor: pointer;
+          background: #000;
+        }
+      </style>
+      <script>
+        function playVideo() {
+          document.getElementById("loading").style.display = "none"
+          document.getElementById("intro").play()
+        }
+        function main() {
+          let vid = document.getElementById("intro")
+
+          if(vid) {
+            vid.ontimeupdate = function() {
+              if(vid.currentTime >= 88) {
+                window.location.href = "driver.html"
+              }
+            };
+          }
+        }
+      </script>
+  </head>
+
+  <body onload="main()">
+
+    <div id="loading" onclick="playVideo()">Click here to start!</div>
+    <video id="intro">
+      <source src="intro.mp4" type="video/mp4">
+    </video>
+
+  </body>
+</html>

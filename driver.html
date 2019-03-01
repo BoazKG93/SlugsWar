@@ -1,0 +1,174 @@
+<html lang="en">
+  <head>
+      <meta charset="utf-8"/>
+      <title>Slugs Wars</title>
+      <!-- Include external libraries -->
+      <script src = "lib/webgl-utils.js"></script>
+      <script src = "lib/webgl-debug.js"></script>
+      <script src = "lib/updated-cuon-utils.js"></script>
+      <script src = "lib/cuon-matrix.js"></script>
+      <script src = "lib/load-file.js"></script>
+
+      <!-- Include main program -->
+      <script src = "prog/main.js"></script>
+
+      <!-- Include tick function -->
+      <script src = "prog/tick.js"></script>
+
+      <!-- Include internal functions -->
+      <script src = "prog/eventFunctions.js"></script>
+      <script src = "prog/glslFunctions.js"></script>
+
+      <!-- Include scene objects -->
+
+      <script src = "prog/scene/scene.js"></script>
+      <script src = "prog/scene/camera.js"></script>
+      <script src = "prog/scene/vertex.js"></script>
+      <script src = "prog/scene/geometry.js"></script>
+
+      <!-- Include geometric objects -->
+
+      <!-- Include animated geometric objects -->
+      <script src = "prog/geometries/cube.js"></script>
+
+      <!-- Include shaders -->
+      <script src = "prog/shaders.js"></script>
+
+      <!-- OBJ Loading -->
+      <script src = "lib/obj_loading/webgl-obj-loader.js"></script>
+      <script src = "lib/obj_loading/loadedOBJ.js"></script>
+      <style>
+      body,html {
+        overflow: hidden;
+      }
+        @keyframes mover {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        @keyframes pop {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @font-face {
+          font-family: 'Starjedi';
+          src: url('Starjedi.ttf');
+        }
+        #gun, #fire {
+          z-index: 10;
+          position: absolute;
+          height: 200px;
+          bottom: -5px;
+          left: 0;
+          right: -200px;
+          margin: 0 auto;
+        }
+        #fire {
+          z-index: 9;
+          bottom: 30px;
+          right: -100px;
+          display: none;
+        }
+        #gun.move {
+          animation: mover 0.5s infinite  alternate;
+        }
+
+        .score, .hint, .powerup, #loading {
+          position: absolute;
+          z-index: 1000;
+          font-weight: bold;
+          font-size: 20px;
+          top: 20px;
+          left: 20px;
+
+          color: #000;
+              text-shadow: -2px -2px 0 #ffd54e, -2px -1px 0 #ffd54e, -2px 0 0 #ffd54e, -2px 1px 0 #ffd54e, -2px 2px 0 #ffd54e, -1px -2px 0 #ffd54e, -1px -1px 0 #ffd54e, -1px 0 0 #ffd54e, -1px 1px 0 #ffd54e, -1px 2px 0 #ffd54e, 0 -2px 0 #ffd54e, 0 -1px 0 #ffd54e, 0 0 0 #ffd54e, 0 1px 0 #ffd54e, 0 2px 0 #ffd54e, 1px -2px 0 #ffd54e, 1px -1px 0 #ffd54e, 1px 0 0 #ffd54e, 1px 1px 0 #ffd54e, 1px 2px 0 #ffd54e, 2px -2px 0 #ffd54e, 2px -1px 0 #ffd54e, 2px 0 0 #ffd54e, 2px 1px 0 #ffd54e, 2px 2px 0 #ffd54e;
+              font-size: 50px;
+              font-family: 'Starjedi';
+              line-height: 86%;
+              caret-color: #ffd54e;
+              letter-spacing: normal;
+        }
+        .hint {
+          bottom: 20px;
+          top: auto;
+          font-size: 15px;
+          font-family: serif;
+          text-shadow: none;
+          color: #ffd54e;
+        }
+        .powerup {
+          font-size: 100px;
+          text-align: center;
+          left: auto;
+          top: 100px;
+          bottom: 0;
+          margin: auto 0;
+          height: 400px;
+          opacity: 0;
+          display: none;
+          animation: pop 2s infinite  alternate;
+        }
+        #loading {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          font-size: 30px;
+          display: block;
+          z-index: 100000000001;
+          line-height: 200px;
+          text-align: center;
+          top: 0;
+          cursor: pointer;
+          background: #000;
+        }
+      </style>
+  </head>
+
+  <body onresize="resize()">
+    <audio id="a0">
+     <source src="theme.mp3" type="audio/mpeg">
+     Your browser does not support the audio element.
+    </audio>
+    <audio id="a1">
+     <source src="a1.mp3" type="audio/mpeg">
+     Your browser does not support the audio element.
+    </audio>
+    <audio id="a2">
+     <source src="a2.mp3" type="audio/mpeg">
+     Your browser does not support the audio element.
+    </audio>
+    <audio id="a3">
+     <source src="a3.mp3" type="audio/mpeg">
+     Your browser does not support the audio element.
+    </audio>
+    <audio id="a4">
+     <source src="a4.mp3" type="audio/mpeg">
+     Your browser does not support the audio element.
+    </audio>
+    <audio id="laser">
+     <source src="laser.mp3" type="audio/mpeg">
+     Your browser does not support the audio element.
+    </audio>
+    <audio id="power">
+     <source src="power.mp3" type="audio/mpeg">
+     Your browser does not support the audio element.
+    </audio>
+    <!--To clear the JS a bit, we do clear directly in HTML-->
+    <br />
+    <img id="gun" src="./gun_fps.png"><img id="fire" src="./fire.png">
+    <h3 class="hint">Hint: Speak with Master Slug to get power boost</h3>
+    <div class="score">
+      <span id="killed">0</span>/2 Cats killed
+    </div>
+    <h1 id="powerup" class="powerup">power up! go kill darth meow!</h1>
+    <div id="loading" onclick="main()">Start saving the galaxy!</div>
+    <canvas id="canvas" style="position: absolute; bottom:0; left:0;">
+      Please use a browser that supports "canvas"
+    </canvas>
+  </body>
+</html>
